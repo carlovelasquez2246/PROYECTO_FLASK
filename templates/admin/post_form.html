@@ -1,0 +1,22 @@
+{% extends "base_template.html" %}
+
+{% block title %} 
+
+    {%  if post_id %}
+        Modificsndo el post {{ post_id }}
+    {% eslse %}
+        Nuevo Post    
+    {% endif %}  
+
+{% endblock %}
+
+{% block content %}
+
+    {%  if post_id %}
+        Modificsndo el post {{ post_id }}
+    {% eslse %}
+        Nuevo Post    
+    {% endif %} 
+
+{% endblock %}
+
