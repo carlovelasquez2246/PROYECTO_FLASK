@@ -5,6 +5,10 @@
 
 {% block content %} 
 
+    {% if error %}
+        <p style="color: red;"><strong>Error:</strong> {{ error }}
+    {% enif %}
+
     <form action="" method="post" novalidate>
         {{ form.hidden_tag() }}
         <div>
