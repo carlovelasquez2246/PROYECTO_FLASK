@@ -1,20 +1,21 @@
 from flask import url_for
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
-from run import db
 from slugify import slugify
 from sqlalchemy.exc import IntegrityError
+#from flask_sqlalchemy import SQLAlchemy
 
+from app import db
 
-class User(db.Model ,UserMixin):
+class User(db.Model , UserMixin):
 
     __tablename__ = 'blog_user'
 
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer(), primary_key=True)
     name = db.Column(db.String(80), nullable=False)
     email = db.Column(db.String(256), unique=True, nullable=False)
     password = db.Column(db.String(256), nullable=False)
-    is_admin = db.Column(db.Boolean, defaul=False)
+    is_admin = db.Column(db.Boolean(), default=False)
     
     def __repr__(self):
         return f'<User {self.email}>'
@@ -40,11 +41,13 @@ class User(db.Model ,UserMixin):
     
 
 class Post(db.Model):
-    id = db.Column(db.integer, primary_key=True)
-    user_id = db.Column(db.integer, db.ForeignKey("blog_user.id", ondelete='CASCADE'), nullable=False)
+    __tablename__ = 'blog_post'
+
+    id = db.Column(db.Integer(), primary_key=True)
+    user_id = db.Column(db.Integer(), db.ForeignKey("blog_user.id", ondelete='CASCADE'), nullable=False)
     title = db.Column(db.String(256), nullable=False)
     title_slug = db.Column(db.String(256),  unique=True, nullable=False)
-    content = db.Column(db.Texr)
+    content = db.Column(db.Text(), nullable=False)
     
     def __repr__(self):
         return f'<Post {self.title}>'
@@ -63,7 +66,7 @@ class Post(db.Model):
                 saved=True
             except IntegrityError:
                 count += 1
-                self.title_slug = f'{slugify(self.title)} -{count}'
+                self.title_slug = f'{slugify(self.title)}-{count}'
 
     def public_url(self):
         return url_for('show_post', slug=self.title_slug)
